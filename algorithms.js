@@ -1,5 +1,31 @@
-// TODO: Binary search
-// TODO: Linear search
+const linearSearch = (arr, value) => {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === value) return true;
+    }
+    return false;
+}
+
+const binarySearch = (arr, value) => {
+    let start = 0;
+    let end = arr.length - 1;
+
+    while (start <= end) {
+        let middleIndex = Math.floor((start + end) / 2);
+        const comparison = arr[middleIndex].localeCompare(value);
+
+        if (comparison === 0) {
+            return true;
+        }
+
+        if (comparison > 0) {
+            end = middleIndex - 1;
+        } else {
+            start = middleIndex + 1;
+        }
+    }
+
+    return false;
+}
 
 const insertionSortMovies = (array) => {
 
@@ -115,4 +141,4 @@ const quickSortMovies = (moviesList) => {
     ]
 }
 
-module.exports = { quickSortMovies, mergeSortMovies, heapSortMovies, insertionSortMovies };
+module.exports = { quickSortMovies, mergeSortMovies, heapSortMovies, insertionSortMovies, binarySearch, linearSearch };
