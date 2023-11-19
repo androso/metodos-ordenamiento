@@ -40,5 +40,7 @@ const algos = require('./algorithms');
     // Procedemos a utilizar metodos de ordenamiento 
     const quickSorted = algos.quickSortMovies(primerLote);
     const mergeSorted = algos.mergeSortMovies(primerLote);
-    console.log({ quickSorted, mergeSorted})
+    const heapSorted = algos.heapSortMovies(primerLote);
+
+    console.log({ quickSorted, mergeSorted, heapSorted})
 })();

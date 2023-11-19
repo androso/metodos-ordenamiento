@@ -1,8 +1,42 @@
-// TODO: Merge sort
 // TODO: Heap sort
 // TODO: Insertion sort
 // TODO: Binary search
 // TODO: Linear search
+
+function heapSortMovies(array) {
+    buildMaxHeap(array);
+    for (let i = array.length - 1; i >= 0; i--) {
+        [array[0], array[i]] = [array[i], array[0]];
+        heapify(array, i, 0);
+    }
+    return array;
+}
+
+function buildMaxHeap(array) {
+    const size = array.length;
+    for (let i = Math.floor(size / 2) - 1; i >= 0; i--) {
+        heapify(array, size, i);
+    }
+}
+
+function heapify(array, n, i) {
+    let largest = i;
+    const left = 2 * i + 1;
+    const right = 2 * i + 2;
+
+    if (left < n && array[left].localeCompare(array[largest]) > 0) {
+        largest = left;
+    }
+    if (right < n && array[right].localeCompare(array[largest]) > 0) {
+        largest = right;
+    }
+
+    if (largest !== i) {
+        [array[i], array[largest]] = [array[largest], array[i]];
+        heapify(array, n, largest);
+    }
+}
+
 
 const mergeSortMovies = (moviesList) => {
     if (moviesList.length <= 1) {
@@ -65,4 +99,4 @@ const quickSortMovies = (moviesList) => {
     ]
 }
 
-module.exports = { quickSortMovies, mergeSortMovies };
+module.exports = { quickSortMovies, mergeSortMovies, heapSortMovies };
