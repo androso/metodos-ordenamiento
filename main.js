@@ -8,6 +8,7 @@
 require('dotenv').config();
 
 const API_KEY = process.env.API_KEY;
+const algos = require('./algorithms');
 
 (async () => {
     let primerLote = []; // 20 peliculas
@@ -42,5 +43,5 @@ const API_KEY = process.env.API_KEY;
     cuartoLote = allMoviesTitles.slice(0, 200);
 
     // Procedemos a utilizar metodos de ordenamiento 
-
+    
 })();
