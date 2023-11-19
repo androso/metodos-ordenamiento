@@ -5,6 +5,14 @@ require('dotenv').config();
 const API_KEY = process.env.API_KEY;
 const algos = require('./algorithms');
 
+const getDuration = (sortingFn, listado) => {
+    const startTime = performance.now();
+    const result = sortingFn(listado);
+    const endTime = performance.now();
+
+    return `${(endTime - startTime).toFixed(3)}ms`;
+}
+
 (async () => {
     let primerLote = []; // 20 peliculas
     let segundoLote = []; // 60 peliculas
@@ -38,11 +46,32 @@ const algos = require('./algorithms');
     cuartoLote = allMoviesTitles.slice(0, 200);
 
     // Procedemos a utilizar metodos de ordenamiento 
-    const quickSorted = algos.quickSortMovies(primerLote);
-    const mergeSorted = algos.mergeSortMovies(primerLote);
-    const heapSorted = algos.heapSortMovies(primerLote);
-    const insertionSorted = algos.insertionSortMovies(primerLote);
-    const binarySearch = algos.binarySearch(quickSorted, 'Saw X');
-    const linearSearch = algos.linearSearch(quickSorted, 'Saw X2');
-    console.log({ quickSorted, mergeSorted, heapSorted, insertionSorted, binarySearch, linearSearch })
+    const lotes = [primerLote, segundoLote, tercerLote, cuartoLote]
+    let resultados = {
+        quickSortTime: [],
+        mergeSortTime: [],
+        heapSortTime: [],
+        insertionSortTime: [],
+    }
+
+    lotes.forEach((lote, i) => {
+        // QuickSort
+        const quickSortTime = getDuration(algos.quickSortMovies, lote);
+
+        // MergeSort
+        const mergeSortTime = getDuration(algos.mergeSortMovies, lote);
+
+        // heapSort
+        const heapSortTime = getDuration(algos.heapSortMovies, lote);
+
+        // insertionSort
+        const insertionSortTime = getDuration(algos.insertionSortMovies, lote)
+
+        resultados.quickSortTime.push({ cantidad: lote.length, duracion: quickSortTime });
+        resultados.mergeSortTime.push({ cantidad: lote.length, duracion: mergeSortTime });
+        resultados.heapSortTime.push({ cantidad: lote.length, duracion: heapSortTime });
+        resultados.insertionSortTime.push({ cantidad: lote.length, duracion: insertionSortTime });
+    })
+
+    console.log(resultados);
 })();
