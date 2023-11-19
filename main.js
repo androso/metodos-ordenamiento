@@ -1,9 +1,4 @@
-// TODO: Quick sort
-// TODO: Merge sort
-// TODO: Heap sort
-// TODO: Insertion sort
-// TODO: Binary search
-// TODO: Linear search
+
 
 require('dotenv').config();
 
@@ -43,5 +38,7 @@ const algos = require('./algorithms');
     cuartoLote = allMoviesTitles.slice(0, 200);
 
     // Procedemos a utilizar metodos de ordenamiento 
-    
+    const quickSorted = algos.quickSortMovies(primerLote);
+    const mergeSorted = algos.mergeSortMovies(primerLote);
+    console.log({ quickSorted, mergeSorted})
 })();
