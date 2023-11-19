@@ -1,9 +1,25 @@
-// TODO: Heap sort
-// TODO: Insertion sort
 // TODO: Binary search
 // TODO: Linear search
 
-function heapSortMovies(array) {
+const insertionSortMovies = (array) => {
+
+    for (let i = 1; i < array.length; i++) {
+
+        const auxiliar = array[i];
+        let j = i - 1;
+
+        while (j >= 0 && array[j] > auxiliar) {
+            array[j + 1] = array[j];
+            j--;
+        }
+
+        array[j + 1] = auxiliar;
+    }
+
+    return array;
+}
+
+const heapSortMovies = (array) => {
     buildMaxHeap(array);
     for (let i = array.length - 1; i >= 0; i--) {
         [array[0], array[i]] = [array[i], array[0]];
@@ -12,14 +28,14 @@ function heapSortMovies(array) {
     return array;
 }
 
-function buildMaxHeap(array) {
+const buildMaxHeap = (array) => {
     const size = array.length;
     for (let i = Math.floor(size / 2) - 1; i >= 0; i--) {
         heapify(array, size, i);
     }
 }
 
-function heapify(array, n, i) {
+const heapify = (array, n, i) => {
     let largest = i;
     const left = 2 * i + 1;
     const right = 2 * i + 2;
@@ -99,4 +115,4 @@ const quickSortMovies = (moviesList) => {
     ]
 }
 
-module.exports = { quickSortMovies, mergeSortMovies, heapSortMovies };
+module.exports = { quickSortMovies, mergeSortMovies, heapSortMovies, insertionSortMovies };

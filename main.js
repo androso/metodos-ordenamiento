@@ -41,6 +41,7 @@ const algos = require('./algorithms');
     const quickSorted = algos.quickSortMovies(primerLote);
     const mergeSorted = algos.mergeSortMovies(primerLote);
     const heapSorted = algos.heapSortMovies(primerLote);
+    const insertionSorted = algos.insertionSortMovies(primerLote);
 
-    console.log({ quickSorted, mergeSorted, heapSorted})
+    console.log({ quickSorted, mergeSorted, heapSorted, insertionSorted })
 })();
