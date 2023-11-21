@@ -27,6 +27,7 @@ const binarySearch = (arr, value) => {
     return false;
 }
 
+
 const insertionSortMovies = (array) => {
 
     for (let i = 1; i < array.length; i++) {
@@ -141,4 +142,5 @@ const quickSortMovies = (moviesList) => {
     ]
 }
 
-module.exports = { quickSortMovies, mergeSortMovies, heapSortMovies, insertionSortMovies, binarySearch, linearSearch };
+const module = { quickSortMovies, mergeSortMovies, heapSortMovies, insertionSortMovies, binarySearch, linearSearch };
+export default module;
