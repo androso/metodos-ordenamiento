@@ -1,6 +1,15 @@
 import algos from "./algorithms.js";
 
-const getDuration = (sortingFn, listado) => {
+const getDuration = (sortingFn, listado, valorBusqueda = null) => {
+    if (valorBusqueda) {
+        // algoritmo de busqueda
+        const startTime = performance.now();
+        const result = sortingFn(listado, valorBusqueda);
+        const endTime = performance.now();
+
+        return `${(endTime - startTime).toFixed(3)}ms`;
+    }
+
     const startTime = performance.now();
     const result = sortingFn(listado);
     const endTime = performance.now();
@@ -8,7 +17,7 @@ const getDuration = (sortingFn, listado) => {
     return `${(endTime - startTime).toFixed(3)}ms`;
 }
 
-const startBenchmark = async () => {
+const startBenchmark = async ({ searchingAlgorithm = false }) => {
     // Obtenemos listado de peliculas y lo limitamos a 6,000
     const allMoviesJson = await (await fetch("./listMovies.json")).json();
     const allMoviesTitles = allMoviesJson.slice(0, 6000);
@@ -19,7 +28,10 @@ const startBenchmark = async () => {
         mergeSortTime: [],
         heapSortTime: [],
         insertionSortTime: [],
+        binarySearchTime: [],
+        linearSearchTime: []
     }
+
     // creamos lotes de 1000, 2000, 3000 hasta 6000
     for (let i = 1; i < 9; i++) {
         lotes.push(allMoviesTitles.slice(0, Number(`${i}000`)));
@@ -27,30 +39,40 @@ const startBenchmark = async () => {
 
     // Medimos el tiempo de ejecución de cada algoritmos sobre cada lote de peliculas
     lotes.forEach((lote, i) => {
-        // QuickSort
-        const quickSortTime = getDuration(algos.quickSortMovies, lote);
+        if (searchingAlgorithm === true) {
+            const binarySearchTime = getDuration(algos.binarySearch, lote, "Pelicula no-existente");
+            const linearSearchTime = getDuration(algos.linearSearch, lote, "Pelicula no-existente");
+            resultados.binarySearchTime.push({ cantidad: lote.length, duracion: binarySearchTime });
+            resultados.linearSearchTime.push({ cantidad: lote.length, duracion: linearSearchTime });
 
-        // MergeSort
-        const mergeSortTime = getDuration(algos.mergeSortMovies, lote);
+        } else {
+            // QuickSort
+            const quickSortTime = getDuration(algos.quickSortMovies, lote);
 
-        // heapSort
-        const heapSortTime = getDuration(algos.heapSortMovies, lote);
+            // MergeSort
+            const mergeSortTime = getDuration(algos.mergeSortMovies, lote);
 
-        // insertionSort
-        const insertionSortTime = getDuration(algos.insertionSortMovies, lote)
+            // heapSort
+            const heapSortTime = getDuration(algos.heapSortMovies, lote);
 
-        resultados.quickSortTime.push({ cantidad: lote.length, duracion: quickSortTime });
-        resultados.mergeSortTime.push({ cantidad: lote.length, duracion: mergeSortTime });
-        resultados.heapSortTime.push({ cantidad: lote.length, duracion: heapSortTime });
-        resultados.insertionSortTime.push({ cantidad: lote.length, duracion: insertionSortTime });
+            // insertionSort
+            const insertionSortTime = getDuration(algos.insertionSortMovies, lote)
+
+            resultados.quickSortTime.push({ cantidad: lote.length, duracion: quickSortTime });
+            resultados.mergeSortTime.push({ cantidad: lote.length, duracion: mergeSortTime });
+            resultados.heapSortTime.push({ cantidad: lote.length, duracion: heapSortTime });
+            resultados.insertionSortTime.push({ cantidad: lote.length, duracion: insertionSortTime });
+        }
+
     })
 
     return resultados;
 }
 
-const $startBenchmarkBtn = document.getElementById('startBenchmark')
+const $startSortBenchmarkBtn = document.getElementById("startSortBenchmark")
+const $startSearchBenchmarkBtn = document.getElementById("startSearchBenchmark")
 
-$startBenchmarkBtn.addEventListener("click", async () => {
+$startSortBenchmarkBtn.addEventListener("click", async () => {
     const data = await startBenchmark();
     const $graph = document.getElementById('comparisonAlgorithmsGraph');
 
@@ -95,3 +117,36 @@ $startBenchmarkBtn.addEventListener("click", async () => {
     Plotly.newPlot($graph, [quickSortFormattedData, heapSorted, mergeSorted, insertionSorted], layout);
 })
 
+$startSearchBenchmarkBtn.addEventListener("click", async () => {
+    console.log("hi");
+    const data = await startBenchmark({ searchingAlgorithm: true });
+    const $graph = document.getElementById('comparisonAlgorithmsGraph');
+
+    const binarySearchData = {
+        x: data.binarySearchTime.map(item => item.cantidad),
+        y: data.binarySearchTime.map(item => parseFloat(item.duracion.replace('ms', ''))),
+        type: "scatter",
+        name: "binary search"
+    }
+
+    const linearSearchData = {
+        x: data.linearSearchTime.map(item => item.cantidad),
+        y: data.linearSearchTime.map(item => parseFloat(item.duracion.replace('ms', ''))),
+        type: "scatter",
+        name: "linear search"
+    }
+
+    // labels para eje X, eje Y
+    const layout = {
+        height: 800,
+        title: "Comparando Algoritmos de Busqueda",
+        xaxis: {
+            title: 'Datos (Numero de Datos usados para el ordenamiento)',
+        },
+        yaxis: {
+            title: 'Tiempo en milisegundos',
+        }
+    }
+
+    Plotly.newPlot($graph, [binarySearchData, linearSearchData], layout);
+})
