@@ -29,7 +29,7 @@ const startBenchmark = async ({ searchingAlgorithm = false }) => {
         heapSortTime: [],
         insertionSortTime: [],
         binarySearchTime: [],
-        linearSearchTime: []
+        linearSearchTime: [],
     }
 
     // creamos lotes de 1000, 2000, 3000 hasta 6000
@@ -56,7 +56,7 @@ const startBenchmark = async ({ searchingAlgorithm = false }) => {
             const heapSortTime = getDuration(algos.heapSortMovies, lote);
 
             // insertionSort
-            const insertionSortTime = getDuration(algos.insertionSortMovies, lote)
+            const insertionSortTime = getDuration(algos.insertionSortMovies, lote.slice())
 
             resultados.quickSortTime.push({ cantidad: lote.length, duracion: quickSortTime });
             resultados.mergeSortTime.push({ cantidad: lote.length, duracion: mergeSortTime });
@@ -73,7 +73,7 @@ const $startSortBenchmarkBtn = document.getElementById("startSortBenchmark")
 const $startSearchBenchmarkBtn = document.getElementById("startSearchBenchmark")
 
 $startSortBenchmarkBtn.addEventListener("click", async () => {
-    const data = await startBenchmark();
+    const data = await startBenchmark({ searchingAlgorithm: false });
     const $graph = document.getElementById('comparisonAlgorithmsGraph');
 
     // Formateando los datos obtenidos para graficarlos
@@ -83,18 +83,21 @@ $startSortBenchmarkBtn.addEventListener("click", async () => {
         name: "quicksort",
         type: 'scatter', // or 'line' depending on the desired plot type
     };
+
     const heapSorted = {
         x: data.heapSortTime.map(item => item.cantidad),
         y: data.heapSortTime.map(item => parseFloat(item.duracion.replace('ms', ''))),
         type: 'scatter', // or 'line' depending on the desired plot type     
         name: "heapsort"
     }
+
     const mergeSorted = {
         x: data.mergeSortTime.map(item => item.cantidad),
         y: data.mergeSortTime.map(item => parseFloat(item.duracion.replace('ms', ''))),
         type: 'scatter', // or 'line' depending on the desired plot type       
         name: "mergesort"
     }
+
     const insertionSorted = {
         x: data.insertionSortTime.map(item => item.cantidad),
         y: data.insertionSortTime.map(item => parseFloat(item.duracion.replace('ms', ''))),

@@ -28,25 +28,26 @@ const binarySearch = (arr, value) => {
 }
 
 
-const insertionSortMovies = (array) => {
+function insertionSortMovies(arr) {
 
-    for (let i = 1; i < array.length; i++) {
-
-        const auxiliar = array[i];
+    for (let i = 1; i < arr.length; i++) {
+        let currentElement = arr[i];
         let j = i - 1;
 
-        while (j >= 0 && array[j] > auxiliar) {
-            array[j + 1] = array[j];
+        // Compare currentElement with the elements before it
+        while (j >= 0 && arr[j].localeCompare(currentElement) > 0) {
+            arr[j + 1] = arr[j];
             j--;
         }
 
-        array[j + 1] = auxiliar;
+        // Place currentElement at its correct position
+        arr[j + 1] = currentElement;
     }
-
-    return array;
+    return arr
 }
 
-const heapSortMovies = (array) => {
+const heapSortMovies = (list) => {
+    let array = list.slice();
     buildMaxHeap(array);
     for (let i = array.length - 1; i >= 0; i--) {
         [array[0], array[i]] = [array[i], array[0]];
@@ -142,5 +143,19 @@ const quickSortMovies = (moviesList) => {
     ]
 }
 
-const module = { quickSortMovies, mergeSortMovies, heapSortMovies, insertionSortMovies, binarySearch, linearSearch };
+function bubbleSort(arr) {
+    let n = arr.length;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n - i - 1; j++) {
+            if (arr[j].localeCompare(arr[j + 1]) >= 0) {
+                let temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    return arr;
+}
+
+const module = { quickSortMovies, bubbleSort, mergeSortMovies, heapSortMovies, insertionSortMovies, binarySearch, linearSearch };
 export default module;
